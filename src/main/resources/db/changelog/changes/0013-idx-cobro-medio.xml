@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+	<changeSet id="0013-idx-cobro-medio" author="lmsc">
+		<preConditions onFail="MARK_RAN" onError="HALT">
+			<not>
+				<indexExists tableName="cobro" indexName="idx_cobro_medio" />
+			</not>
+		</preConditions>
+
+		<createIndex tableName="cobro" indexName="idx_cobro_medio">
+			<column name="medio_pago" />
+		</createIndex>
+	</changeSet>
+
+
+</databaseChangeLog>

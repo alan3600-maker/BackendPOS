@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+	<changeSet id="0010-idx-venta-estado-fecha" author="lmsc">
+		<preConditions onFail="MARK_RAN" onError="HALT">
+			<not>
+				<indexExists tableName="venta"
+					indexName="idx_venta_estado_fecha" />
+			</not>
+		</preConditions>
+
+		<createIndex tableName="venta" indexName="idx_venta_estado_fecha">
+			<column name="estado" />
+			<column name="fecha" />
+		</createIndex>
+	</changeSet>
+
+
+</databaseChangeLog>

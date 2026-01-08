@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+	<changeSet id="0015-fk-documento-venta" author="lmsc">
+		<preConditions onFail="MARK_RAN" onError="HALT">
+			<not>
+				<foreignKeyConstraintExists
+					foreignKeyName="fk_documento_venta_venta" />
+			</not>
+		</preConditions>
+
+		<addForeignKeyConstraint
+			baseTableName="documento_venta"
+			baseColumnNames="venta_id"
+			referencedTableName="venta"
+			referencedColumnNames="id"
+			constraintName="fk_documento_venta_venta" />
+	</changeSet>
+
+
+</databaseChangeLog>

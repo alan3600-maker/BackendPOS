@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+  <!-- Etapa 2: Sucursal + Caja + Turno (apertura/cierre) + base de POS (IVA) -->
+
+  <changeSet id="0005-001-create-sucursal" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="sucursal"/></not>
+    </preConditions>
+
+    <createTable tableName="sucursal">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="nombre" type="varchar(120)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="direccion" type="varchar(255)"/>
+      <column name="telefono" type="varchar(60)"/>
+      <column name="created_at" type="timestamp with time zone"/>
+      <column name="updated_at" type="timestamp with time zone"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="0005-002-create-caja" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="caja"/></not>
+    </preConditions>
+
+    <createTable tableName="caja">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="sucursal_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="nombre" type="varchar(120)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="codigo" type="varchar(60)"/>
+      <column name="activa" type="boolean" defaultValueBoolean="true">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_at" type="timestamp with time zone"/>
+      <column name="updated_at" type="timestamp with time zone"/>
+    </createTable>
+
+    <addForeignKeyConstraint
+      baseTableName="caja"
+      baseColumnNames="sucursal_id"
+      referencedTableName="sucursal"
+      referencedColumnNames="id"
+      constraintName="fk_caja_sucursal"/>
+
+    <createIndex tableName="caja" indexName="idx_caja_sucursal">
+      <column name="sucursal_id"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- caja_turno: creación base + FK a caja + índices -->
+  <changeSet id="0005-003-create-caja_turno" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="caja_turno"/></not>
+    </preConditions>
+
+    <createTable tableName="caja_turno">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="caja_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="usuario_apertura_id" type="bigint"/>
+      <column name="usuario_cierre_id" type="bigint"/>
+      <column name="apertura_at" type="timestamp with time zone">
+        <constraints nullable="false"/>
+      </column>
+      <column name="cierre_at" type="timestamp with time zone"/>
+      <column name="monto_inicial" type="numeric(18,2)" defaultValueNumeric="0">
+        <constraints nullable="false"/>
+      </column>
+      <column name="monto_final_declarado" type="numeric(18,2)" defaultValueNumeric="0">
+        <constraints nullable="false"/>
+      </column>
+      <column name="estado" type="varchar(20)" defaultValue="ABIERTA">
+        <constraints nullable="false"/>
+      </column>
+      <column name="observacion" type="varchar(255)"/>
+      <column name="created_at" type="timestamp with time zone"/>
+      <column name="updated_at" type="timestamp with time zone"/>
+    </createTable>
+
+    <addForeignKeyConstraint
+      baseTableName="caja_turno"
+      baseColumnNames="caja_id"
+      referencedTableName="caja"
+      referencedColumnNames="id"
+      constraintName="fk_turno_caja"/>
+
+    <createIndex tableName="caja_turno" indexName="idx_turno_caja">
+      <column name="caja_id"/>
+    </createIndex>
+    <createIndex tableName="caja_turno" indexName="idx_turno_estado">
+      <column name="estado"/>
+    </createIndex>
+  </changeSet>
+
+  <!-- caja_turno: FKs a usuario (solo si existe tabla usuario) -->
+  <changeSet id="0005-004-fk-caja_turno-usuario" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="caja_turno"/>
+        <tableExists tableName="usuario"/>
+      </and>
+    </preConditions>
+
+    <addForeignKeyConstraint
+      baseTableName="caja_turno"
+      baseColumnNames="usuario_apertura_id"
+      referencedTableName="usuario"
+      referencedColumnNames="id"
+      constraintName="fk_turno_usuario_apertura"/>
+
+    <addForeignKeyConstraint
+      baseTableName="caja_turno"
+      baseColumnNames="usuario_cierre_id"
+      referencedTableName="usuario"
+      referencedColumnNames="id"
+      constraintName="fk_turno_usuario_cierre"/>
+  </changeSet>
+
+  <changeSet id="0005-010-add-iva_tipo-producto" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="producto"/>
+        <not><columnExists tableName="producto" columnName="iva_tipo"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="producto">
+      <column name="iva_tipo" type="varchar(10)" defaultValue="IVA10">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <!-- venta_item: un changeSet por columna (para mantener MARK_RAN por columna) -->
+  <changeSet id="0005-011a-add-iva_tipo-venta_item" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta_item"/>
+        <not><columnExists tableName="venta_item" columnName="iva_tipo"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta_item">
+      <column name="iva_tipo" type="varchar(10)" defaultValue="IVA10"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-011b-add-descuento_monto-venta_item" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta_item"/>
+        <not><columnExists tableName="venta_item" columnName="descuento_monto"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta_item">
+      <column name="descuento_monto" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-011c-add-recargo_monto-venta_item" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta_item"/>
+        <not><columnExists tableName="venta_item" columnName="recargo_monto"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta_item">
+      <column name="recargo_monto" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-011d-add-iva_monto-venta_item" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta_item"/>
+        <not><columnExists tableName="venta_item" columnName="iva_monto"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta_item">
+      <column name="iva_monto" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <!-- venta: un changeSet por columna -->
+  <changeSet id="0005-012a-add-subtotal-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="subtotal"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="subtotal" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012b-add-descuento_total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="descuento_total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="descuento_total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012c-add-recargo_total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="recargo_total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="recargo_total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012d-add-iva_10_total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="iva_10_total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="iva_10_total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012e-add-iva_5_total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="iva_5_total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="iva_5_total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012f-add-exenta_total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="exenta_total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="exenta_total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="0005-012g-add-total-venta" author="hidraulica">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="venta"/>
+        <not><columnExists tableName="venta" columnName="total"/></not>
+      </and>
+    </preConditions>
+
+    <addColumn tableName="venta">
+      <column name="total" type="numeric(18,2)" defaultValueNumeric="0"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>
