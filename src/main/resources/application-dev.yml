@@ -1,4 +1,6 @@
 spring:
+  liquibase:
+    enabled: true
   config:
     activate:
       on-profile: dev

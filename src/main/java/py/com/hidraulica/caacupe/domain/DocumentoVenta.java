@@ -1,7 +1,6 @@
 package py.com.hidraulica.caacupe.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
@@ -13,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import py.com.hidraulica.caacupe.domain.enums.EstadoDocumento;
@@ -28,10 +26,14 @@ public class DocumentoVenta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// Relación con la venta
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "venta_id", nullable = false)
 	private Venta venta;
+
+	// Para Nota de Crédito u otros documentos referenciando al original
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "documento_origen_id")
+	private DocumentoVenta documentoOrigen;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo_documento", nullable = false, length = 30)
@@ -45,45 +47,40 @@ public class DocumentoVenta {
 	@Column(name = "estado", nullable = false, length = 30)
 	private EstadoDocumento estado = EstadoDocumento.BORRADOR;
 
-	// Numeración
 	@Column(name = "serie", length = 20)
 	private String serie;
 
 	@Column(name = "numero")
 	private Long numero;
 
-	// Timbrado (Paraguay)
 	@Column(name = "timbrado", length = 20)
 	private String timbrado;
 
 	@Column(name = "vigencia_desde")
-	private LocalDate vigenciaDesde;
+	private java.time.LocalDate vigenciaDesde;
 
 	@Column(name = "vigencia_hasta")
-	private LocalDate vigenciaHasta;
+	private java.time.LocalDate vigenciaHasta;
 
-	// Electrónica (SIFEN)
 	@Column(name = "cdc", length = 60)
 	private String cdc;
 
-	@Lob
-	@Column(name = "xml_sifen")
+	@Column(name = "xml_sifen", columnDefinition = "text")
 	private String xmlSifen;
 
 	@Column(name = "fecha_emision", nullable = false)
 	private OffsetDateTime fechaEmision = OffsetDateTime.now();
 
-	// Snapshot del cliente (CRÍTICO)
+	// Snapshot cliente
 	@Column(name = "cliente_nombre", nullable = false)
 	private String clienteNombre;
 
-	@Column(name = "cliente_doc", nullable = false)
+	@Column(name = "cliente_doc", nullable = false, length = 30)
 	private String clienteDocumento;
 
 	@Column(name = "cliente_direccion")
 	private String clienteDireccion;
 
-	// Totales congelados
 	@Column(name = "total", nullable = false, precision = 19, scale = 2)
 	private BigDecimal total;
 
@@ -101,6 +98,14 @@ public class DocumentoVenta {
 
 	public void setVenta(Venta venta) {
 		this.venta = venta;
+	}
+
+	public DocumentoVenta getDocumentoOrigen() {
+		return documentoOrigen;
+	}
+
+	public void setDocumentoOrigen(DocumentoVenta documentoOrigen) {
+		this.documentoOrigen = documentoOrigen;
 	}
 
 	public TipoDocumentoVenta getTipoDocumento() {
@@ -151,19 +156,19 @@ public class DocumentoVenta {
 		this.timbrado = timbrado;
 	}
 
-	public LocalDate getVigenciaDesde() {
+	public java.time.LocalDate getVigenciaDesde() {
 		return vigenciaDesde;
 	}
 
-	public void setVigenciaDesde(LocalDate vigenciaDesde) {
+	public void setVigenciaDesde(java.time.LocalDate vigenciaDesde) {
 		this.vigenciaDesde = vigenciaDesde;
 	}
 
-	public LocalDate getVigenciaHasta() {
+	public java.time.LocalDate getVigenciaHasta() {
 		return vigenciaHasta;
 	}
 
-	public void setVigenciaHasta(LocalDate vigenciaHasta) {
+	public void setVigenciaHasta(java.time.LocalDate vigenciaHasta) {
 		this.vigenciaHasta = vigenciaHasta;
 	}
 
@@ -223,4 +228,5 @@ public class DocumentoVenta {
 		this.total = total;
 	}
 
+	
 }

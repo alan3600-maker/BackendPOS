@@ -1,13 +1,809 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-      http://www.liquibase.org/xml/ns/dbchangelog
-      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
-
-  <changeSet id="001" author="hidraulica">
-    <!-- acá van createTable / addColumn / constraints -->
-  </changeSet>
-
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="Lauro (generated)" id="1768171558719-1">
+        <createTable tableName="categoria">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="categoria_pkey"/>
+            </column>
+            <column name="nombre" type="VARCHAR(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-2">
+        <createTable tableName="marca">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="marca_pkey"/>
+            </column>
+            <column name="nombre" type="VARCHAR(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-3">
+        <createTable tableName="proveedor">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="proveedor_pkey"/>
+            </column>
+            <column name="nombre_razon_social" type="VARCHAR(160)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ruc" type="VARCHAR(30)"/>
+            <column name="telefono" type="VARCHAR(30)"/>
+            <column name="direccion" type="VARCHAR(200)"/>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-4">
+        <createTable tableName="caja">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="caja_pkey"/>
+            </column>
+            <column name="sucursal_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="codigo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-5">
+        <createTable tableName="caja_turno">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="caja_turno_pkey"/>
+            </column>
+            <column name="caja_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="usuario_apertura_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="usuario_cierre_id" type="BIGINT"/>
+            <column name="fecha_apertura" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_cierre" type="TIMESTAMP WITH TIME ZONE"/>
+            <column defaultValueNumeric="0" name="monto_inicial" type="numeric(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="monto_cierre_declarado" type="numeric(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="ABIERTA" name="estado" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observacion" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-6">
+        <createTable tableName="sucursal">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sucursal_pkey"/>
+            </column>
+            <column name="nombre" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="direccion" type="VARCHAR(255)"/>
+            <column name="telefono" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-7">
+        <createTable tableName="producto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="producto_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="iva_tipo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio" type="numeric(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="categoria_id" type="BIGINT"/>
+            <column name="marca_id" type="BIGINT"/>
+            <column name="proveedor_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-8">
+        <createTable tableName="cobro">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cobro_pkey"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="medio_pago" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="monto" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venta_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-9">
+        <createTable tableName="documento_venta">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="documento_venta_pkey"/>
+            </column>
+            <column name="cdc" type="VARCHAR(60)"/>
+            <column name="cliente_direccion" type="VARCHAR(255)"/>
+            <column name="cliente_doc" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cliente_nombre" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_emision" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modalidad" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero" type="BIGINT"/>
+            <column name="serie" type="VARCHAR(20)"/>
+            <column name="timbrado" type="VARCHAR(20)"/>
+            <column name="tipo_documento" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vigencia_desde" type="date"/>
+            <column name="vigencia_hasta" type="date"/>
+            <column name="xml_sifen" type="TEXT"/>
+            <column name="documento_origen_id" type="BIGINT"/>
+            <column name="venta_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-10">
+        <createTable tableName="factura">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="factura_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero" type="VARCHAR(40)"/>
+            <column name="serie" type="VARCHAR(20)"/>
+            <column name="timbrado" type="VARCHAR(30)"/>
+            <column name="timbrado_vencimiento" type="date"/>
+            <column name="tipo" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cliente_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venta_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-11">
+        <createTable tableName="factura_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="factura_item_pkey"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio_unitario" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_linea" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="factura_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="producto_id" type="BIGINT"/>
+            <column name="servicio_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-12">
+        <createTable tableName="movimiento_stock">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="movimiento_stock_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referencia_id" type="BIGINT"/>
+            <column name="referencia_tipo" type="VARCHAR(60)"/>
+            <column name="tipo" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-13">
+        <createTable tableName="orden_trabajo">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="orden_trabajo_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(500)"/>
+            <column name="estado" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cliente_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-14">
+        <createTable tableName="presupuesto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="presupuesto_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observacion" type="VARCHAR(500)"/>
+            <column name="total" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cliente_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-15">
+        <createTable tableName="presupuesto_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="presupuesto_item_pkey"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio_unitario" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_linea" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="presupuesto_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="producto_id" type="BIGINT"/>
+            <column name="servicio_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-16">
+        <createTable tableName="venta">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="venta_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observacion" type="VARCHAR(500)"/>
+            <column name="total" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cliente_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="caja_turno_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-17">
+        <createTable tableName="venta_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="venta_item_pkey"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio_unitario" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_linea" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deposito_id" type="BIGINT"/>
+            <column name="producto_id" type="BIGINT"/>
+            <column name="servicio_id" type="BIGINT"/>
+            <column name="venta_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-18">
+        <createTable tableName="cliente">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cliente_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="direccion" type="VARCHAR(250)"/>
+            <column name="email" type="VARCHAR(120)"/>
+            <column name="nombre_razon_social" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ruc" type="VARCHAR(20)"/>
+            <column name="telefono" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-19">
+        <createTable tableName="permiso">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="permiso_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(200)"/>
+            <column name="nombre" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-20">
+        <createTable tableName="rol">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rol_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-21">
+        <createTable tableName="stock">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="stock_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="BIGINT"/>
+            <column name="deposito_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="producto_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-22">
+        <createTable tableName="usuario">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="usuario_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-23">
+        <createTable tableName="servicio">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="servicio_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="codigo" type="VARCHAR(60)"/>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio" type="numeric(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-24">
+        <addUniqueConstraint columnNames="nombre" constraintName="uk_categoria_nombre" tableName="categoria"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-25">
+        <addUniqueConstraint columnNames="nombre" constraintName="uk_marca_nombre" tableName="marca"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-26">
+        <createIndex indexName="idx_caja_sucursal" tableName="caja">
+            <column name="sucursal_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-27">
+        <createIndex indexName="idx_turno_caja" tableName="caja_turno">
+            <column name="caja_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-28">
+        <createIndex indexName="idx_turno_estado" tableName="caja_turno">
+            <column name="estado"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-29">
+        <createIndex indexName="ix_producto_desc" tableName="producto">
+            <column name="descripcion"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-30">
+        <addUniqueConstraint columnNames="sku" constraintName="ukclpng6f2m2r9i1y5g2yxajyuq" tableName="producto"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-31">
+        <addUniqueConstraint columnNames="numero" constraintName="uk4bd3nq8ndl753rig6e8qh4s7y" tableName="factura"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-32">
+        <addUniqueConstraint columnNames="ruc" constraintName="uk_cliente_ruc" tableName="cliente"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-33">
+        <addUniqueConstraint columnNames="nombre" constraintName="uk_permiso_nombre" tableName="permiso"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-34">
+        <addUniqueConstraint columnNames="nombre" constraintName="uk_rol_nombre" tableName="rol"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-35">
+        <addUniqueConstraint columnNames="producto_id, deposito_id" constraintName="uk_stock_producto_deposito" tableName="stock"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-36">
+        <addUniqueConstraint columnNames="username" constraintName="uk_usuario_username" tableName="usuario"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-37">
+        <addUniqueConstraint columnNames="codigo" constraintName="ukpwh13m4qjjtpkp05kja5aewhx" tableName="servicio"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-38">
+        <createTable tableName="deposito">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="deposito_pkey"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(120)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-39">
+        <createTable tableName="movimiento_stock_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="movimiento_stock_item_pkey"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deposito_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movimiento_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="producto_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-40">
+        <createTable tableName="orden_trabajo_repuesto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="orden_trabajo_repuesto_pkey"/>
+            </column>
+            <column name="cantidad" type="numeric(19, 3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deposito_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="orden_trabajo_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="producto_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-41">
+        <createTable tableName="rol_permiso">
+            <column name="rol_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="uk_rol_permiso"/>
+            </column>
+            <column name="permiso_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="uk_rol_permiso"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-42">
+        <createTable tableName="usuario_rol">
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="uk_usuario_rol"/>
+            </column>
+            <column name="rol_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="uk_usuario_rol"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-43">
+        <addForeignKeyConstraint baseColumnNames="servicio_id" baseTableName="venta_item" constraintName="fk1f0cs4jnpeg5u0wnndd8srkeu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="servicio" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-44">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="stock" constraintName="fk1hx9o107cpb0o8hppaicd7af9" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-45">
+        <addForeignKeyConstraint baseColumnNames="cliente_id" baseTableName="factura" constraintName="fk2602efsrpmevi8yxg464stfn5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cliente" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-46">
+        <addForeignKeyConstraint baseColumnNames="venta_id" baseTableName="documento_venta" constraintName="fk2jlncndfmihjnqq6g7081rni9" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="venta" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-47">
+        <addForeignKeyConstraint baseColumnNames="deposito_id" baseTableName="stock" constraintName="fk3ije9bxe69pbcyh7jxtjhsgf8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="deposito" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-48">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="movimiento_stock_item" constraintName="fk3os373ykdc7ynbtpf74pwn8tx" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-49">
+        <addForeignKeyConstraint baseColumnNames="servicio_id" baseTableName="factura_item" constraintName="fk53tt34g03mtvpf3m2srysg0q5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="servicio" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-50">
+        <addForeignKeyConstraint baseColumnNames="deposito_id" baseTableName="orden_trabajo_repuesto" constraintName="fk5jx99x5gpn5whjq9e6thqkcas" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="deposito" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-51">
+        <addForeignKeyConstraint baseColumnNames="rol_id" baseTableName="usuario_rol" constraintName="fk610kvhkwcqk2pxeewur4l7bd1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rol" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-52">
+        <addForeignKeyConstraint baseColumnNames="servicio_id" baseTableName="presupuesto_item" constraintName="fk64y4sorgpuwglawjtkpiokrs" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="servicio" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-53">
+        <addForeignKeyConstraint baseColumnNames="caja_turno_id" baseTableName="venta" constraintName="fk6liju7q8ihsqt0wyjr8j3ahhu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="caja_turno" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-54">
+        <addForeignKeyConstraint baseColumnNames="rol_id" baseTableName="rol_permiso" constraintName="fk6o522368i97la9m9cqn0gul2e" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rol" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-55">
+        <addForeignKeyConstraint baseColumnNames="marca_id" baseTableName="producto" constraintName="fk868tnrt85f21kgcvt9bftgr8r" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="marca" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-56">
+        <addForeignKeyConstraint baseColumnNames="factura_id" baseTableName="factura_item" constraintName="fk8m8feje1ig03ufg21um9liu1h" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="factura" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-57">
+        <addForeignKeyConstraint baseColumnNames="sucursal_id" baseTableName="caja" constraintName="fk_caja_sucursal" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sucursal" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-58">
+        <addForeignKeyConstraint baseColumnNames="caja_id" baseTableName="caja_turno" constraintName="fk_turno_caja" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="caja" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-59">
+        <addForeignKeyConstraint baseColumnNames="cliente_id" baseTableName="venta" constraintName="fka7yaj59nfh3gft0h38o5bv472" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cliente" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-60">
+        <addForeignKeyConstraint baseColumnNames="documento_origen_id" baseTableName="documento_venta" constraintName="fkaomtbro20p7ty4igyr8lavlx0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="documento_venta" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-61">
+        <addForeignKeyConstraint baseColumnNames="usuario_id" baseTableName="usuario_rol" constraintName="fkbyfgloj439r9wr9smrms9u33r" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="usuario" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-62">
+        <addForeignKeyConstraint baseColumnNames="venta_id" baseTableName="venta_item" constraintName="fkc9b05e27moa53hgdltgxxnbyv" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="venta" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-63">
+        <addForeignKeyConstraint baseColumnNames="movimiento_id" baseTableName="movimiento_stock_item" constraintName="fkcdvuiv94ega2mmp1dw9a9yg37" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="movimiento_stock" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-64">
+        <addForeignKeyConstraint baseColumnNames="presupuesto_id" baseTableName="presupuesto_item" constraintName="fkffhv7xcneaaxial7wqx9a57xf" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="presupuesto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-65">
+        <addForeignKeyConstraint baseColumnNames="venta_id" baseTableName="cobro" constraintName="fkfn05ekrtp43kq6on6g83n23s6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="venta" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-66">
+        <addForeignKeyConstraint baseColumnNames="permiso_id" baseTableName="rol_permiso" constraintName="fkfyao8wd0o5tsyem1w55s3141k" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="permiso" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-67">
+        <addForeignKeyConstraint baseColumnNames="venta_id" baseTableName="factura" constraintName="fkge881o1cecrpgmk5cwsmc2kcu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="venta" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-68">
+        <addForeignKeyConstraint baseColumnNames="proveedor_id" baseTableName="producto" constraintName="fkid8vjxky5juk3fnuc1sb9qarf" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="proveedor" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-69">
+        <addForeignKeyConstraint baseColumnNames="usuario_apertura_id" baseTableName="caja_turno" constraintName="fkj56y0w3avtu64c0pxc96ncke3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="usuario" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-70">
+        <addForeignKeyConstraint baseColumnNames="usuario_cierre_id" baseTableName="caja_turno" constraintName="fkj9yv4egehsr678p9hxctn095k" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="usuario" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-71">
+        <addForeignKeyConstraint baseColumnNames="deposito_id" baseTableName="movimiento_stock_item" constraintName="fkl3be8jxblfy5253v51p6i9p26" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="deposito" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-72">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="orden_trabajo_repuesto" constraintName="fklxa8krwgigponw17k7g98byy8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-73">
+        <addForeignKeyConstraint baseColumnNames="orden_trabajo_id" baseTableName="orden_trabajo_repuesto" constraintName="fkml1pre4uwe90kxib9xdtf1stq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="orden_trabajo" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-74">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="venta_item" constraintName="fko3nvrjwr0010ketyo6fe2r0yr" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-75">
+        <addForeignKeyConstraint baseColumnNames="categoria_id" baseTableName="producto" constraintName="fkodqr7965ok9rwquj1utiamt0m" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="categoria" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-76">
+        <addForeignKeyConstraint baseColumnNames="deposito_id" baseTableName="venta_item" constraintName="fkoiivhxcjq8ulvse1icwje9f0l" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="deposito" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-77">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="presupuesto_item" constraintName="fkpn4cernjth1ht95cjc4biw275" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-78">
+        <addForeignKeyConstraint baseColumnNames="cliente_id" baseTableName="presupuesto" constraintName="fkrk2dr9sk2ukvud57mp4pxbgic" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cliente" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-79">
+        <addForeignKeyConstraint baseColumnNames="producto_id" baseTableName="factura_item" constraintName="fkskeews7k15bxv6tewhtwodktu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="producto" validate="true"/>
+    </changeSet>
+    <changeSet author="Lauro (generated)" id="1768171558719-80">
+        <addForeignKeyConstraint baseColumnNames="cliente_id" baseTableName="orden_trabajo" constraintName="fktmeokv6t6q31n79gxxhhc00m0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cliente" validate="true"/>
+    </changeSet>
 </databaseChangeLog>

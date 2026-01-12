@@ -56,7 +56,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecific
 	@Query("""
 			  select
 			    u.id as usuarioId,
-			    u.nombre as usuarioNombre,
+			    u.username as usuarioNombre,
 			    count(v.id) as cantidad,
 			    coalesce(sum(v.total), 0) as total
 			  from Venta v
@@ -65,7 +65,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecific
 			  where v.estado = 'CONFIRMADA'
 			    and (:desde is null or v.fecha >= :desde)
 			    and (:hasta is null or v.fecha <= :hasta)
-			  group by u.id, u.nombre
+			  group by u.id, u.username
 			  order by total desc
 			""")
 	List<VentasPorCajeroRow> ventasPorCajero(@Param("desde") OffsetDateTime desde,

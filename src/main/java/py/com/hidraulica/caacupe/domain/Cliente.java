@@ -27,6 +27,7 @@ public class Cliente extends BaseEntity {
 
 	@Column(name = "ruc", length = 20)
 	private String ruc;
+	
 
 	@Column(name = "telefono", length = 30)
 	private String telefono;
