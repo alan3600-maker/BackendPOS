@@ -58,6 +58,7 @@ public class CajaTurnoService {
 		t.setFechaApertura(OffsetDateTime.now());
 		t.setMontoInicial(montoInicial != null ? montoInicial : BigDecimal.ZERO);
 		t.setEstado(EstadoTurnoCaja.ABIERTA);
+		t.setMontoCierreDeclarado(BigDecimal.ZERO);
 
 		return turnoRepo.save(t);
 	}

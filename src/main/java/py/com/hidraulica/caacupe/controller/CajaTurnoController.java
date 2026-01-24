@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import py.com.hidraulica.caacupe.domain.CajaTurno;
 import py.com.hidraulica.caacupe.dto.ArqueoCajaDto;
+import py.com.hidraulica.caacupe.dto.CajaTurnoDto;
+import py.com.hidraulica.caacupe.security.SecurityUtils;
 import py.com.hidraulica.caacupe.service.CajaTurnoService;
 
 @RestController
@@ -29,8 +31,9 @@ public class CajaTurnoController {
   @ResponseStatus(HttpStatus.CREATED)
   public CajaTurno abrir(
       @RequestParam Long cajaId,
-      @RequestParam Long usuarioAperturaId,
-      @RequestParam(required = false, defaultValue = "0") BigDecimal montoInicial) {
+      @RequestParam(required = false, defaultValue = "0") BigDecimal montoInicial
+  ) {
+    Long usuarioAperturaId = SecurityUtils.currentUserId();
     return service.abrir(cajaId, usuarioAperturaId, montoInicial);
   }
 
@@ -44,8 +47,10 @@ public class CajaTurnoController {
   }
 
   @GetMapping("/abierta")
-  public CajaTurno obtenerAbierta(@RequestParam Long cajaId) {
-    return service.getTurnoAbierto(cajaId).orElse(null);
+  public CajaTurnoDto obtenerAbierta(@RequestParam Long cajaId) {
+    return service.getTurnoAbierto(cajaId)
+        .map(CajaTurnoDto::of)
+        .orElse(null);
   }
   
   @GetMapping("/{id}/arqueo")

@@ -19,6 +19,7 @@ import py.com.hidraulica.caacupe.domain.Venta;
 import py.com.hidraulica.caacupe.domain.VentaItem;
 import py.com.hidraulica.caacupe.domain.enums.EstadoTurnoCaja;
 import py.com.hidraulica.caacupe.domain.enums.EstadoVenta;
+import py.com.hidraulica.caacupe.domain.enums.MedioPago;
 import py.com.hidraulica.caacupe.domain.enums.TipoItem;
 import py.com.hidraulica.caacupe.domain.enums.TipoMovimientoStock;
 import py.com.hidraulica.caacupe.dto.MovimientoStockRequest;
@@ -292,6 +293,15 @@ public class VentaService {
 		if (!v.getTurno().getCaja().getId().equals(cajaId)) {
 			throw new BusinessException("La venta pertenece a otra caja. No se puede confirmar con cajaId=" + cajaId);
 		}
+		
+		if (v.getCobros() == null || v.getCobros().isEmpty()) {
+			  Cobro c = new Cobro();
+			  c.setVenta(v);
+			  c.setFecha(OffsetDateTime.now());
+			  c.setMedioPago(MedioPago.EFECTIVO); 
+			  c.setMonto(v.getTotal());
+			  v.getCobros().add(c);
+			}
 
 		// 3) Validar cobro contado: sum(cobros) == total
 		BigDecimal total = v.getTotal() != null ? v.getTotal() : BigDecimal.ZERO;
