@@ -26,64 +26,58 @@ import py.com.hidraulica.caacupe.service.ClienteService;
 @RequestMapping("/api/v1/clientes")
 public class ClienteController {
 
-  private final ClienteService service;
+	private final ClienteService service;
 
-  public ClienteController(ClienteService service) {
-    this.service = service;
-  }
+	public ClienteController(ClienteService service) {
+		this.service = service;
+	}
 
-  @PostMapping
-  public Cliente create(@RequestBody @Valid Cliente body) {
-    return service.create(body);
-  }
+	@PostMapping
+	public Cliente create(@RequestBody @Valid Cliente body) {
+		return service.create(body);
+	}
 
-  @GetMapping("/{id}")
-  public Cliente get(@PathVariable Long id) {
-    return service.get(id);
-  }
-  @GetMapping
-  public PageResponse<ClienteDto> listar(
-      @PageableDefault(size = 20, sort = "id") Pageable pageable,
-      ClienteSearchDto search
-  ) {
-    return service.search(search, pageable);
-  }
+	@GetMapping("/{id}")
+	public Cliente get(@PathVariable Long id) {
+		return service.get(id);
+	}
 
+	@GetMapping
+	public PageResponse<ClienteDto> listar(@PageableDefault(size = 20, sort = "id") Pageable pageable,
+			ClienteSearchDto search) {
+		return service.search(search, pageable);
+	}
 
-  @GetMapping("/all")
-  public List<Cliente> list() {
-    return service.list();
-  }
+	@GetMapping("/all")
+	public List<Cliente> list() {
+		return service.list();
+	}
 
-  @PutMapping("/{id}")
-  public Cliente update(@PathVariable Long id, @RequestBody @Valid Cliente body) {
-    return service.update(id, body);
-  }
+	@PutMapping("/{id}")
+	public Cliente update(@PathVariable Long id, @RequestBody @Valid Cliente body) {
+		return service.update(id, body);
+	}
 
-  @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id) {
-    service.desactivar(id);
-  }
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable Long id) {
+		service.desactivar(id);
+	}
 
-  @PutMapping("/{id}/activar")
-  public void activar(@PathVariable Long id) {
-    service.activar(id);
-  }
+	@PutMapping("/{id}/activar")
+	public void activar(@PathVariable Long id) {
+		service.activar(id);
+	}
 
-@GetMapping("/search")
-  public PageResponse<ClienteDto> search(
-      @RequestParam(required = false) String q,
-      @RequestParam(required = false) Boolean incluirInactivos,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size,
-      @RequestParam(defaultValue = "id") String sortBy,
-      @RequestParam(defaultValue = "desc") String dir
-  ) {
-    return service.searchDto(q, incluirInactivos, page, size, sortBy, dir);
-  }
-  
-  @GetMapping("/exists-ruc")
-  public Map<String, Object> existsRuc(@RequestParam String ruc) {
-    return Map.of("ruc", ruc, "exists", service.existsByRuc(ruc));
-  }
+	@GetMapping("/search")
+	public PageResponse<ClienteDto> search(@RequestParam(required = false) String q,
+			@RequestParam(required = false) Boolean incluirInactivos, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "desc") String dir) {
+		return service.searchDto(q, incluirInactivos, page, size, sortBy, dir);
+	}
+
+	@GetMapping("/exists-ruc")
+	public Map<String, Object> existsRuc(@RequestParam String ruc) {
+		return Map.of("ruc", ruc, "exists", service.existsByRuc(ruc));
+	}
 }

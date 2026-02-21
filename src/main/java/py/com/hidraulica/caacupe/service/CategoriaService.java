@@ -1,13 +1,18 @@
 package py.com.hidraulica.caacupe.service;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import py.com.hidraulica.caacupe.domain.Categoria;
-import py.com.hidraulica.caacupe.dto.CatalogoSearchDto;
 import py.com.hidraulica.caacupe.dto.CategoriaDto;
+import py.com.hidraulica.caacupe.dto.CategoriaSearchDto;
 import py.com.hidraulica.caacupe.dto.PageResponse;
 import py.com.hidraulica.caacupe.exception.BusinessException;
 import py.com.hidraulica.caacupe.exception.NotFoundException;
@@ -40,6 +45,10 @@ public class CategoriaService {
     return repo.findById(id).orElseThrow(() -> new NotFoundException("Categoría no encontrada: " + id));
   }
 
+  public List<Categoria> list() {
+    return repo.findAllByActivoTrue();
+  }
+
   public Categoria update(Long id, Categoria body) {
     var current = get(id);
     String nombre = body.getNombre() != null ? body.getNombre().trim() : null;
@@ -65,7 +74,32 @@ public class CategoriaService {
     repo.save(current);
   }
 
-  public PageResponse<CategoriaDto> search(CatalogoSearchDto search, Pageable pageable) {
+  /**
+   * Estilo "Cliente": endpoint /search con page/size/sortBy/dir.
+   */
+  public PageResponse<CategoriaDto> searchDto(String q, Boolean incluirInactivos, int page, int size, String sortBy,
+      String dir) {
+    if (size <= 0)
+      size = 20;
+    if (page < 0)
+      page = 0;
+
+    Set<String> allowed = Set.of("id", "nombre");
+    if (!StringUtils.hasText(sortBy) || !allowed.contains(sortBy))
+      sortBy = "id";
+
+    Sort.Direction direction = "asc".equalsIgnoreCase(dir) ? Sort.Direction.ASC : Sort.Direction.DESC;
+    Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+    String s = StringUtils.hasText(q) ? q.trim() : null;
+    boolean inc = Boolean.TRUE.equals(incluirInactivos);
+
+    Page<Categoria> p = repo.search(s, inc, pageable);
+    var content = p.getContent().stream().map(this::toDto).toList();
+    return new PageResponse<>(content, p.getTotalElements(), p.getTotalPages(), p.getNumber(), p.getSize());
+  }
+
+  public PageResponse<CategoriaDto> search(CategoriaSearchDto search, Pageable pageable) {
     String q = (search != null && StringUtils.hasText(search.getQ())) ? search.getQ().trim() : null;
     boolean incluirInactivos = search != null && Boolean.TRUE.equals(search.getIncluirInactivos());
 

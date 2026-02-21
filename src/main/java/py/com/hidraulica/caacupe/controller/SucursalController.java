@@ -7,7 +7,7 @@ import py.com.hidraulica.caacupe.domain.Sucursal;
 import py.com.hidraulica.caacupe.service.SucursalService;
 
 @RestController
-@RequestMapping("/api/sucursales")
+@RequestMapping("/api/v1/sucursales")
 public class SucursalController {
 
 	private final SucursalService service;

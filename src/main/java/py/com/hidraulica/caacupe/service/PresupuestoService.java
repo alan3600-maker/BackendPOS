@@ -4,6 +4,7 @@ import py.com.hidraulica.caacupe.domain.*;
 import py.com.hidraulica.caacupe.domain.enums.EstadoPresupuesto;
 import py.com.hidraulica.caacupe.domain.enums.TipoItem;
 import py.com.hidraulica.caacupe.dto.PresupuestoRequest;
+import py.com.hidraulica.caacupe.dto.PresupuestoDto;
 import py.com.hidraulica.caacupe.dto.VentaRequest;
 import py.com.hidraulica.caacupe.exception.BusinessException;
 import py.com.hidraulica.caacupe.exception.NotFoundException;
@@ -46,8 +47,22 @@ public class PresupuestoService {
     return repo.findById(id).orElseThrow(() -> new NotFoundException("Presupuesto no encontrado: " + id));
   }
 
-  public java.util.List<Presupuesto> list() {
-    return repo.findAll();
+  public java.util.List<PresupuestoDto> list() {
+    // Importante: traer cliente para evitar LazyInitializationException en serialización.
+    return repo.findAllWithCliente().stream().map(this::toDtoListItem).toList();
+  }
+
+  private PresupuestoDto toDtoListItem(Presupuesto p) {
+    PresupuestoDto dto = new PresupuestoDto();
+    dto.id = p.getId();
+    dto.clienteId = p.getCliente() != null ? p.getCliente().getId() : null;
+    dto.clienteNombre = p.getCliente() != null ? p.getCliente().getNombreRazonSocial() : null;
+    dto.fecha = p.getFecha();
+    dto.estado = p.getEstado() != null ? p.getEstado().name() : null;
+    dto.observacion = p.getObservacion();
+    dto.total = p.getTotal();
+    dto.items = null; // en listado no hace falta
+    return dto;
   }
 
   public Page<Presupuesto> search(Long clienteId, EstadoPresupuesto estado, OffsetDateTime desde, OffsetDateTime hasta, Pageable pageable) {

@@ -1,18 +1,28 @@
 package py.com.hidraulica.caacupe.controller;
 
-import py.com.hidraulica.caacupe.domain.Presupuesto;
-import py.com.hidraulica.caacupe.domain.Venta;
-import py.com.hidraulica.caacupe.domain.enums.EstadoPresupuesto;
-import py.com.hidraulica.caacupe.dto.PresupuestoRequest;
-import py.com.hidraulica.caacupe.service.PresupuestoService;
-import jakarta.validation.Valid;
+import java.time.OffsetDateTime;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.OffsetDateTime;
-import java.util.List;
+import jakarta.validation.Valid;
+import py.com.hidraulica.caacupe.domain.Presupuesto;
+import py.com.hidraulica.caacupe.domain.Venta;
+import py.com.hidraulica.caacupe.domain.enums.EstadoPresupuesto;
+import py.com.hidraulica.caacupe.dto.PresupuestoDto;
+import py.com.hidraulica.caacupe.dto.PresupuestoRequest;
+import py.com.hidraulica.caacupe.service.PresupuestoService;
 
 @RestController
 @RequestMapping("/api/v1/presupuestos")
@@ -35,7 +45,7 @@ public class PresupuestoController {
   }
 
   @GetMapping
-  public List<Presupuesto> list() {
+  public List<PresupuestoDto> list() {
     return service.list();
   }
 

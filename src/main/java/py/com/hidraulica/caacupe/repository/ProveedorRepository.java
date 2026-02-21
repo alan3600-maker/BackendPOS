@@ -10,6 +10,10 @@ import py.com.hidraulica.caacupe.domain.Proveedor;
 
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
 
+  boolean existsByRuc(String ruc);
+
+  java.util.List<Proveedor> findAllByActivoTrue();
+
   @Query("""
       select p from Proveedor p
       where

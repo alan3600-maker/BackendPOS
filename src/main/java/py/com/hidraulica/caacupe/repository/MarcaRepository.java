@@ -12,6 +12,8 @@ public interface MarcaRepository extends JpaRepository<Marca, Long> {
 
   boolean existsByNombreIgnoreCase(String nombre);
 
+  java.util.List<Marca> findAllByActivoTrue();
+
   @Query("""
       select m from Marca m
       where

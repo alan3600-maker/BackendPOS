@@ -12,6 +12,8 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
   boolean existsByNombreIgnoreCase(String nombre);
 
+  java.util.List<Categoria> findAllByActivoTrue();
+
   @Query("""
       select c from Categoria c
       where
