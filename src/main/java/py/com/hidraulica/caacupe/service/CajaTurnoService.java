@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import py.com.hidraulica.caacupe.domain.Caja;
 import py.com.hidraulica.caacupe.domain.CajaTurno;
 import py.com.hidraulica.caacupe.domain.enums.EstadoTurnoCaja;
+import py.com.hidraulica.caacupe.domain.enums.TipoMovimientoCaja;
 import py.com.hidraulica.caacupe.domain.security.Usuario;
 import py.com.hidraulica.caacupe.dto.ArqueoCajaDto;
 import py.com.hidraulica.caacupe.dto.ArqueoPorMedioDto;
@@ -18,6 +19,7 @@ import py.com.hidraulica.caacupe.exception.BusinessException;
 import py.com.hidraulica.caacupe.exception.NotFoundException;
 import py.com.hidraulica.caacupe.repository.CajaRepository;
 import py.com.hidraulica.caacupe.repository.CajaTurnoRepository;
+import py.com.hidraulica.caacupe.repository.CajaMovimientoRepository;
 import py.com.hidraulica.caacupe.repository.CobroRepository;
 import py.com.hidraulica.caacupe.repository.security.UsuarioRepository;
 
@@ -29,13 +31,15 @@ public class CajaTurnoService {
 	private final CajaTurnoRepository turnoRepo;
 	private final UsuarioRepository usuarioRepo;
 	private final CobroRepository cobroRepo;
+	private final CajaMovimientoRepository movRepo;
 
 	public CajaTurnoService(CajaRepository cajaRepo, CajaTurnoRepository turnoRepo, UsuarioRepository usuarioRepo,
-			CobroRepository cobroRepo) {
+			CobroRepository cobroRepo, CajaMovimientoRepository movRepo) {
 		this.cajaRepo = cajaRepo;
 		this.turnoRepo = turnoRepo;
 		this.usuarioRepo = usuarioRepo;
 		this.cobroRepo = cobroRepo;
+		this.movRepo = movRepo;
 	}
 
 	public Optional<CajaTurno> getTurnoAbierto(Long cajaId) {
@@ -91,6 +95,17 @@ public class CajaTurnoService {
 		if (totalEsperado == null)
 			totalEsperado = BigDecimal.ZERO;
 
+		BigDecimal totalEfectivo = cobroRepo.totalEfectivoEnTurno(turnoId);
+		if (totalEfectivo == null)
+			totalEfectivo = BigDecimal.ZERO;
+
+		BigDecimal totalIngresos = movRepo.totalByTurnoAndTipo(turnoId, TipoMovimientoCaja.INGRESO);
+		if (totalIngresos == null)
+			totalIngresos = BigDecimal.ZERO;
+		BigDecimal totalEgresos = movRepo.totalByTurnoAndTipo(turnoId, TipoMovimientoCaja.EGRESO);
+		if (totalEgresos == null)
+			totalEgresos = BigDecimal.ZERO;
+
 		List<ArqueoPorMedioDto> porMedio = cobroRepo.resumenPorMedioEnTurno(turnoId).stream().map(
 				r -> new ArqueoPorMedioDto(r.getMedioPago(), r.getTotal() == null ? BigDecimal.ZERO : r.getTotal()))
 				.toList();
@@ -100,9 +115,15 @@ public class CajaTurnoService {
 			declarado = BigDecimal.ZERO;
 
 		BigDecimal montoInicial = t.getMontoInicial() == null ? BigDecimal.ZERO : t.getMontoInicial();
+		BigDecimal saldoEfectivoEsperado = montoInicial.add(totalEfectivo).add(totalIngresos).subtract(totalEgresos);
 		BigDecimal diferencia = declarado.subtract(totalEsperado);
 
 		return new ArqueoCajaDto(t.getId(), t.getCaja() != null ? t.getCaja().getId() : null, t.getFechaApertura(),
-				t.getFechaCierre(), montoInicial, totalEsperado, declarado, diferencia, porMedio);
+				t.getFechaCierre(), montoInicial,
+				totalEsperado, // totalVentas (por ahora igual a total cobrado)
+				totalIngresos,
+				totalEgresos,
+				saldoEfectivoEsperado,
+				totalEsperado, declarado, diferencia, porMedio);
 	}
 }

@@ -33,12 +33,22 @@ public interface CobroRepository extends JpaRepository<Cobro, Long> {
 	java.math.BigDecimal totalCobradoEnTurno(@Param("turnoId") Long turnoId);
 
 	@Query("""
+			  select coalesce(sum(c.monto), 0)
+			  from Cobro c
+			  join c.venta v
+			  where v.turno.id = :turnoId
+			    and v.estado = 'CONFIRMADA'
+			    and c.medioPago = 'EFECTIVO'
+			""")
+	java.math.BigDecimal totalEfectivoEnTurno(@Param("turnoId") Long turnoId);
+
+	@Query("""
 			  select c.medioPago as medioPago, coalesce(sum(c.monto), 0) as total
 			  from Cobro c
 			  join c.venta v
 			  where v.estado = 'CONFIRMADA'
-			    and (:desde is null or v.fecha >= :desde)
-			    and (:hasta is null or v.fecha <= :hasta)
+			    and v.fecha >= coalesce(:desde, v.fecha)
+			    and v.fecha <= coalesce(:hasta, v.fecha)
 			  group by c.medioPago
 			  order by c.medioPago
 			""")

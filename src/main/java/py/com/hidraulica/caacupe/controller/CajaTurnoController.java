@@ -40,9 +40,9 @@ public class CajaTurnoController {
   @PostMapping("/{turnoId}/cerrar")
   public CajaTurno cerrar(
       @PathVariable Long turnoId,
-      @RequestParam Long usuarioCierreId,
       @RequestParam(required = false) BigDecimal montoFinalDeclarado,
       @RequestParam(required = false) String observacion) {
+    Long usuarioCierreId = SecurityUtils.currentUserId();
     return service.cerrar(turnoId, usuarioCierreId, montoFinalDeclarado, observacion);
   }
 

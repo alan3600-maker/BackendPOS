@@ -37,7 +37,9 @@ public class SecurityConfig {
 						.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
 						// Operaciones de caja: ventas/facturas/clientes/productos/servicios
-						.requestMatchers("/api/v1/ventas/**", "/api/v1/facturas/**").hasAnyRole("ADMIN", "CAJERO")
+					.requestMatchers("/api/v1/ventas/**", "/api/v1/facturas/**", "/api/v1/reportes/**",
+							"/api/v1/caja-turnos/**", "/api/v1/caja-movimientos/**")
+					.hasAnyRole("ADMIN", "CAJERO")
 						.requestMatchers("/api/v1/clientes/**", "/api/v1/productos/**", "/api/v1/servicios/**", "/api/v1/categorias/**", "/api/v1/marcas/**", "/api/v1/proveedores/**")
 						.hasAnyRole("ADMIN", "CAJERO")
 

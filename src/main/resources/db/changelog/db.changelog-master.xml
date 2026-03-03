@@ -8,6 +8,7 @@
 	romper -->
 	<!--<include file="db/changelog/changes/0001-baseline.xml" /-->
 	<include file="db/changelog/changes/0001-init.xml" />
+	<include file="db/changelog/changes/0002-caja-movimiento.xml" />
 
 
 

@@ -17,6 +17,17 @@ import py.com.hidraulica.caacupe.repository.proj.VentasPorCajeroRow;
 import py.com.hidraulica.caacupe.repository.proj.VentasPorDiaRow;
 
 public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecificationExecutor<Venta> {
+
+	@Query("""
+			select v from Venta v
+			join fetch v.cliente c
+			left join fetch v.cobros co
+			where v.estado = 'CONFIRMADA'
+			  and v.fecha >= coalesce(:desde, v.fecha)
+			  and v.fecha <= coalesce(:hasta, v.fecha)
+			order by v.fecha asc, v.id asc
+		""")
+	List<Venta> findConfirmadasForReporte(@Param("desde") OffsetDateTime desde, @Param("hasta") OffsetDateTime hasta);
 	@Query("""
 			  select v from Venta v
 			  join fetch v.cliente c
@@ -24,8 +35,8 @@ public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecific
 			  left join fetch t.caja ca
 			  where (:clienteId is null or c.id = :clienteId)
 			    and (:estado is null or v.estado = :estado)
-			    and (:desde is null or v.fecha >= :desde)
-			    and (:hasta is null or v.fecha <= :hasta)
+			    and v.fecha >= coalesce(:desde, v.fecha)
+			    and v.fecha <= coalesce(:hasta, v.fecha)
 			""")
 	Page<Venta> search(@Param("clienteId") Long clienteId, @Param("estado") EstadoVenta estado,
 			@Param("desde") OffsetDateTime desde, @Param("hasta") OffsetDateTime hasta, Pageable pageable);
@@ -46,8 +57,8 @@ public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecific
 			    coalesce(sum(v.total), 0) as total
 			  from Venta v
 			  where v.estado = 'CONFIRMADA'
-			    and (:desde is null or v.fecha >= :desde)
-			    and (:hasta is null or v.fecha <= :hasta)
+			    and v.fecha >= coalesce(:desde, v.fecha)
+			    and v.fecha <= coalesce(:hasta, v.fecha)
 			  group by function('date', v.fecha)
 			  order by function('date', v.fecha)
 			""")
@@ -63,8 +74,8 @@ public interface VentaRepository extends JpaRepository<Venta, Long>, JpaSpecific
 			  join v.turno t
 			  join t.usuarioApertura u
 			  where v.estado = 'CONFIRMADA'
-			    and (:desde is null or v.fecha >= :desde)
-			    and (:hasta is null or v.fecha <= :hasta)
+			    and v.fecha >= coalesce(:desde, v.fecha)
+			    and v.fecha <= coalesce(:hasta, v.fecha)
 			  group by u.id, u.username
 			  order by total desc
 			""")
